@@ -1,0 +1,26 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: infra-minio
+manifests:
+  kustomize:
+    paths:
+      - overlays/base
+
+profiles:
+  - name: dev
+    # activation:
+    #   - kubeContext: rancher-desktop
+    manifests:
+      kustomize:
+        paths: ["overlays/dev"]
+    portForward:
+    - resourceType: service
+      resourceName: minio-service
+      port: 9000
+      localPort: 9002
+    - resourceType: service
+      resourceName: minio-service
+      port: 9001
+      localPort: 9001
+

@@ -1,0 +1,23 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+# ... other configurations (build, etc.) ...
+metadata:
+  name: infra-argocd
+
+manifests:
+  rawYaml: 
+    - k8s/install.yaml
+
+deploy:
+  kubectl:
+    defaultNamespace: argocd
+    flags:
+      apply:
+        - "--server-side"
+        - "--force-conflicts"
+
+portForward:
+  - resourceType: service
+    resourceName: argocd
+    port: 443
+    localPort: 8080

@@ -1,0 +1,32 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: infra-mysql
+manifests:
+  kustomize:
+    paths:
+      - overlays/base
+
+profiles:
+  - name: dev
+    # activation:
+    #   - kubeContext: rancher-desktop
+    manifests:
+      kustomize:
+        paths: ["overlays/dev"]
+    # portForward:
+    # - resourceType: service
+    #   resourceName: mysql-service
+    #   port: 3306
+    #   localPort: 3306
+  - name: dev-2
+    # activation:
+    #   - kubeContext: rancher-desktop
+    manifests:
+      kustomize:
+        paths: ["overlays/dev-2"]
+    portForward:
+    - resourceType: service
+      resourceName: mysql-service
+      port: 3307
+      localPort: 3307

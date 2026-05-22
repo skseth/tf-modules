@@ -1,0 +1,27 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: infra-minio
+manifests:
+  kustomize:
+    paths:
+      - overlays/base
+deploy:
+  kubectl:
+    defaultNamespace: infra
+
+profiles:
+  - name: dev
+    activation:
+      - kubeContext: rancher-desktop
+    manifests:
+      kustomize:
+        paths:
+          - overlays/dev
+    portForward:
+    - resourceType: service
+      resourceName: openbao-service
+      port: 8200
+      localPort: 8200
+
+

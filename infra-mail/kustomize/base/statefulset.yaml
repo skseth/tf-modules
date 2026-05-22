@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mailpit
+spec:
+  serviceName: mailpit-headless
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mailpit
+  template:
+    metadata:
+      labels:
+        app: mailpit
+    spec:
+      containers:
+        - name: mailpit
+          image: axllent/mailpit:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 1025
+              name: smtp
+            - containerPort: 8025
+              name: http
+          env:
+            # Mailpit stores data in /data by default
+            - name: MP_DATA_DIR
+              value: /data
+          volumeMounts:
+            - name: mailpit-storage
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: mailpit-storage
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        resources:
+          requests:
+            storage: 5Gi

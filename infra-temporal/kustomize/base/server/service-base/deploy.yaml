@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/master/master/deployment-apps-v1.json
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service
+  labels:
+    app.kubernetes.io/component: service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: service
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: service
+    spec:
+      enableServiceLinks: false
+      volumes:
+        - name: dynamic-config
+          configMap:
+            name: dynamic-config
+            optional: false
+            items:
+              - key: dynamic-config.yaml
+                path: config.yaml
+      initContainers:
+        - name: auto-setup
+          image: temporalio/auto-setup
+          command:
+            - /bin/bash
+            - -ex
+            - -c
+            - --
+            - |
+              # Patch to avoid starting setup_server in the background
+              # setup_server waits for the Temporal cluster to become healthy
+              # and then creates the "default" namespace & custom visibility attributes.
+              # Those are mostly an application concern, so avoid doing that here.
+              cat auto-setup.sh | sed 's/setup_server &//g' | tee /tmp/auto-setup.sh > /dev/null
+              chmod +x /tmp/auto-setup.sh
+
+              until /tmp/auto-setup.sh; do
+                echo "Trying again in a few seconds..."
+                sleep 2
+              done
+          envFrom:
+            - configMapRef:
+                name: static-config-env
+                optional: false
+      containers:
+        - name: service
+          image: temporalio/server
+          volumeMounts:
+            - name: dynamic-config
+              mountPath: /mnt/volumes/dynamic-config/
+              readOnly: true
+          envFrom:
+            - configMapRef:
+                name: static-config-env
+                optional: false
+          env:
+            - name: SERVICES
+              value: "service"
+
+            - name: DYNAMIC_CONFIG_FILE_PATH
+              value: "/mnt/volumes/dynamic-config/config.yaml"
+
+            - name: BIND_ON_IP
+              value: "0.0.0.0"
+
+            - name: TEMPORAL_BROADCAST_ADDRESS
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+
+          livenessProbe:
+            tcpSocket:
+              port: grpc
+            failureThreshold: 5
+            successThreshold: 1
+            periodSeconds: 10
+            timeoutSeconds: 1

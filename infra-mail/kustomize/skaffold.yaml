@@ -1,0 +1,30 @@
+apiVersion: skaffold/v4beta13
+kind: Config
+metadata:
+  name: infra-kafka
+manifests:
+  kustomize:    
+    paths:
+      - overlays/base
+
+profiles:
+  - name: dev
+    activation:
+      - kubeContext: rancher-desktop
+    manifests:
+      kustomize:
+        paths:
+          - overlays/dev
+    deploy:
+      kubectl:
+        defaultNamespace: infra
+    portForward:
+      - resourceType: service
+        resourceName: kafka-service
+        port: 9094
+        localPort: 9094
+      - resourceType: service
+        resourceName: kafka-ui
+        port: 9090
+        localPort: 9090
+

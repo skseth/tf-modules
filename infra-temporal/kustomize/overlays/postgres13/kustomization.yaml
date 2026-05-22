@@ -1,0 +1,19 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./ns.yaml
+  - ../../base/
+
+namespace: temporal-pg13
+
+configMapGenerator:
+  - name: static-config-env
+    behavior: merge
+    literals:
+      - DB=postgresql
+      - DB_PORT=5432
+      - DBNAME=temporal
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=postgresql.temporal-ds-pg13.svc.cluster.local

@@ -1,0 +1,54 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./server/
+  - ./ui/
+  - ./admin-tools/
+
+namePrefix: temporal-
+
+commonLabels:
+  app.kubernetes.io/name: temporal
+
+images:
+  - name: temporalio/server
+    newTag: 1.22.0
+  - name: temporalio/auto-setup
+    newTag: 1.22.0
+  - name: temporalio/admin-tools
+    newTag: 1.22.0
+  - name: temporalio/ui
+    newTag: 2.18.2
+
+replacements:
+  - source:
+      kind: Service
+      name: frontend
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: ConfigMap
+          name: static-config-env
+        fieldPaths:
+          - data.TEMPORAL_ADDRESS
+          - data.TEMPORAL_CLI_ADDRESS
+        options:
+          create: true
+  - source:
+      kind: Service
+      name: frontend
+      fieldPath: spec.ports.[name=grpc].port
+    targets:
+      - select:
+          kind: ConfigMap
+          name: static-config-env
+        fieldPaths:
+          - data.TEMPORAL_ADDRESS
+          - data.TEMPORAL_CLI_ADDRESS
+        options:
+          delimiter: ":"
+          index: 1
+          create: true
+
+

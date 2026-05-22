@@ -1,0 +1,51 @@
+[mysqld]
+
+# Binary logging must be enabled.
+log_bin=mysql-bin
+binlog_format=ROW
+binlog_transaction_dependency_tracking = WRITESET
+log_replica_updates=ON
+
+# To ensure replication at transaction level
+# gtid_mode: Must be ON for transaction tracking across the cluster.
+# enforce_gtid_consistency: Must be ON to ensure only GTID-safe statements are executed.
+gtid_mode=ON
+enforce_gtid_consistency=ON
+
+
+# FOR DEV ENVIRONMENT - ALL FOLLOWING NOT RECOMMENDED FOR PRODUCTION
+innodb_flush_log_at_trx_commit = 2
+
+# reduce memory
+performance_schema=ON
+
+# Disable all instruments by default to save the most memory
+# performance-schema-instrument='%=OFF'
+
+# Re-enable ONLY what is needed for Group Replication/Cluster status
+# performance-schema-instrument='memory/performance_schema/%=ON'
+# performance-schema-instrument='wait/synch/mutex/sql/group_replication%=ON'
+# performance-schema-instrument='transaction%=ON'
+
+# Core Memory Reductions
+innodb_buffer_pool_chunk_size=32M
+innodb_buffer_pool_size=32M
+innodb_log_buffer_size=1M
+
+# Connection/Thread limits to reduce memory
+max_connections=20
+thread_stack=192K
+
+# Buffer limits to reduce memory
+key_buffer_size=8M
+sort_buffer_size=256K
+read_buffer_size=256K
+read_rnd_buffer_size=256K
+
+# Disable background features - reduce memory
+innodb_stats_on_metadata=0
+
+temptable_max_ram=32M
+
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci

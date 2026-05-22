@@ -1,0 +1,14 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ./frontend/
+  - ./history/
+  - ./matching/
+  - ./worker/
+
+configMapGenerator:
+  - name: static-config-env
+  - name: dynamic-config
+    literals:
+      - dynamic-config.yaml=

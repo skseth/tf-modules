@@ -1,0 +1,19 @@
+[project]
+name = "mysqlpy"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Samir Seth",email = "samirkseth@gmail.com"}
+]
+requires-python = ">=3.13"
+dependencies = [
+    "mysql-connector-python (>=9.6.0,<10.0.0)",
+    "pytest-mock (>=3.15.1,<4.0.0)",
+    "pytest (>=9.0.3,<10.0.0)",
+    "mysqlx-connector-python (>=9.6.0,<10.0.0)",
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"

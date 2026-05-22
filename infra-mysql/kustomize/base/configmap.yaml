@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+data:
+  my.cnf: |
+    [mysqld]
+    innodb_buffer_pool_size = 256M
+    max_connections         = 200
+    slow_query_log          = 1
+    long_query_time         = 1
+

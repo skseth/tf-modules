@@ -1,0 +1,9 @@
+# pvc-patch.yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: kafka-pvc  
+spec:
+  resources:
+    requests:
+      storage: 5Gi   

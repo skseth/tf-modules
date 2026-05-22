@@ -1,0 +1,13 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+# Points to the directories containing the child kustomizations
+resources:
+  - service.yaml
+  - deployment.yaml
+
+# Transformations applied to ALL children
+labels:
+- pairs:
+    product: infra
+

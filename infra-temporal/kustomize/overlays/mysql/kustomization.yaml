@@ -1,0 +1,21 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - ../../base/
+
+namespace: infra
+
+configMapGenerator:
+  - name: static-config-env
+    behavior: merge
+    literals:
+      - DB=mysql8
+      - MYSQL_SEEDS=mysql-0.mysql.infra.svc.cluster.local
+      - DB_PORT=3306
+      - DBNAME=temporal
+      - MYSQL_USER=root
+      - MYSQL_PWD=rootpassword
+      - SKIP_DB_CREATE=false
+
+# mysql -h mysql-0.mysql.infra -P 3306 -u root -prootpassword

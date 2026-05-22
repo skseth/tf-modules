@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: infra
+
+# Points to the directories containing the child kustomizations
+resources:
+  - ../../base
+
+configMapGenerator:
+- name: mysql-config
+  behavior: replace
+  files:
+    - my.cnf 
+
+secretGenerator:
+- name: mysql-secret
+  envs:
+  - env.secret
