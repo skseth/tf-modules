@@ -9,5 +9,9 @@ spec:
   selector:
     app: mailpit
   ports:
-    - port: 8025
+    - name: http
+      port: 8025
       targetPort: 8025
+    - name: smtp
+      port: 1025
+      targetPort: 1025
