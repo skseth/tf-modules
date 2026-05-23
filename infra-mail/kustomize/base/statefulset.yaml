@@ -26,6 +26,10 @@ spec:
             # Mailpit stores data in /data by default
             - name: MP_DATA_DIR
               value: /data
+            - name: MP_SMTP_AUTH_ACCEPT_ANY
+              value: "1"
+            - name: MP_SMTP_AUTH_ALLOW_INSECURE
+              value: "1"
           volumeMounts:
             - name: mailpit-storage
               mountPath: /data
