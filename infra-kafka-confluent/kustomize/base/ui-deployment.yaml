@@ -21,6 +21,6 @@ spec:
         - name: KAFKA_CLUSTERS_0_NAME
           value: "local"
         - name: KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS
-          value: "kafka-service:9092" 
+          value: "kafka-0.kafka-headless:9092" 
         - name: DYNAMIC_CONFIG_ENABLED
           value: "true"

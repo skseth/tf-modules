@@ -1,7 +1,6 @@
 
 
 
-# LoadBalancer to expose the first instance to your Host
 resource "kubernetes_service_v1" "mysql_internal" {
   for_each = local.namespaces
 
@@ -65,28 +64,28 @@ resource "kubernetes_service_v1" "mysql_external" {
 
 # Target: Routes to the MySQL Router pods, which then perform the actual health-aware routing to the correct MySQL instance.
 # LoadBalancer to expose the first instance to your Host
-resource "kubernetes_service_v1" "mysql_router" {
-  for_each = local.namespaces
-  metadata {
-    name      = "mysql-router-service"
-    namespace = each.key
-  }
-  spec {
-    type     = "LoadBalancer"
-    selector = { 
-      "app" = "mysql-router" 
-    }
-    port {
-      name = "mysql-rw"
-      protocol = "TCP"
-      port        = 6446
-      target_port = 6446
-    }
-    port {
-      name = "mysql-ro"
-      protocol = "TCP"
-      port        = 6446
-      target_port = 6446
-    }
-  }
-}
+# resource "kubernetes_service_v1" "mysql_router" {
+#   for_each = local.namespaces
+#   metadata {
+#     name      = "mysql-router-service"
+#     namespace = each.key
+#   }
+#   spec {
+#     type     = "LoadBalancer"
+#     selector = { 
+#       "app" = "mysql-router" 
+#     }
+#     port {
+#       name = "mysql-rw"
+#       protocol = "TCP"
+#       port        = 6446
+#       target_port = 6446
+#     }
+#     port {
+#       name = "mysql-ro"
+#       protocol = "TCP"
+#       port        = 6446
+#       target_port = 6446
+#     }
+#   }
+# }

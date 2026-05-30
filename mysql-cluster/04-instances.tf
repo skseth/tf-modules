@@ -76,7 +76,7 @@ resource "kubernetes_stateful_set_v1" "mysql" {
 
         container {
           name  = "mysql"
-          image = "uidai/mysql:1.0.5"
+          image = "samirkseth/mysql-cluster:1.0.0"
 
           env {
             name  = "CLUSTER_NAME"

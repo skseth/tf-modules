@@ -6,7 +6,7 @@ resource "terraform_data" "clusterset" {
     }
 
     provisioner "local-exec" {
-      command = "bash ${path.module}/scripts/initialize-clusterset.sh ${var.namespace} mysql-0 root:${var.root_password}"
+      command = "bash ${path.module}/scripts/initialize-clusterset.sh ${var.namespace} mysql-0 root:${var.root_password}@mysql-0.${var.cluster_name}.${var.namespace}"
     }
 
     depends_on = [ kubernetes_stateful_set_v1.mysql ]
